@@ -11,4 +11,5 @@ public class MemberSearchCondition {
     // メールアドレス検索用
     private String mail;
     // TODO: 氏名検索用メンバ変数を用意
+    private String name;
 }
