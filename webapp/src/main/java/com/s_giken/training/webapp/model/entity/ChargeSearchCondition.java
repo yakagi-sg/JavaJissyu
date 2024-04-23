@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ChargeSearchCondition {
     // 料金情報検索用
     private String charge;
-    
+
 }
