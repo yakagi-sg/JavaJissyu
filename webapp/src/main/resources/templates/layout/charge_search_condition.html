@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/app :: layout('加入者検索', ~{::content}, 'member')}">
 <div th:fragment="content">
-  <!--/* 加入者情報検索画面 */-->
-  <form th:action="@{/member/search}" th:object="${memberSearchCondition}" method="POST">
-    <!--/* 料金名 */-->
-    <div class="mb-3 row">
-      <label class="col-sm-2 col-form-label" for="mail">料金名</label>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" th:field="*{mail}" />
-      </div>
-    </div>
+    <!--/* 加入者情報検索画面 */-->
+    <form th:action="@{/charge/search}" th:object="${chargeSearchCondition}" method="POST">
+        <!--/* 料金名 */-->
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label" for="charge">料金名</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="text" th:field="*{charge}" />
+            </div>
+        </div>
 
-   
 
-    <div class="mb-3 row">
-      <label class="col-sm-2 col-form-label"></label>
-      <div class="col-sm-10">
-        <button type="submit" class="btn btn-primary">検索</button>
-        <a class="btn btn-secondary" th:href="@{/member/add}">登録</a>
-      </div>
-    </div>
 
-  </form>
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">検索</button>
+                <a class="btn btn-secondary" th:href="@{/member/add}">登録</a>
+            </div>
+        </div>
+
+    </form>
 </div>
 
 </html>
