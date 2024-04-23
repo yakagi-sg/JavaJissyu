@@ -23,14 +23,14 @@ import org.springframework.validation.annotation.Validated;
 @Controller // コントローラークラスであることを示す
 @RequestMapping("/charge") // リクエストパスを指定
 public class ChargeController {
-	private final ChargeService chargeService;
+	private final MemberService chargeService;
 
 	/**
 	 * 加入者管理機能のコントローラークラスのコンストラクタ
 	 * 
 	 * @param chargeService 加入者管理機能のサービスクラス(SpringのDIコンテナから渡される)
 	 */
-	public ChargeController(ChargeService chargeService) {
+	public ChargeController(MemberService chargeService) {
 		this.chargeService = chargeService;
 	}
 
@@ -111,7 +111,7 @@ public class ChargeController {
 		if (bindingResult.hasErrors()) {
 			return "member_edit";
 		}
-		chargeervice.save(member);
+		chargeService.save(member);
 		redirectAttributes.addFlashAttribute("message", "保存しました。");
 		return "redirect:/member/edit/" + member.getMemberId();
 	}
