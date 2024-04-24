@@ -50,34 +50,33 @@ public class ChargeServiceImpl implements ChargeService {
      * 
      * @param chargeSearchCondition 加入者検索条件
      * @return 条件に一致した加入者情報
-      */
-      @Override
-               public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition) {
-               // TODO: 氏名検索用メソッドを呼び出すように修正
-               return chargeRepository.findAll();
-               }
-      
-      
-     /**
-     加入者を登録する
-     
+     */
+    @Override
+    public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition) {
+        // TODO: 氏名検索用メソッドを呼び出すように修正
+        return chargeRepository.findByChargeLike("%" + chargeSearchCondition.getName() + "%");
+    }
+
+
+    /**
+     * 加入者を登録する
+     *
      * @param charge 登録する加入者情報
      * @return 登録した加入者情報
-     *  */
-      @Override
-                public void save(Charge charge) {
-                chargeRepository.save(charge);
-                }
-    
+     */
+    @Override
+    public void save(Charge charge) {
+        chargeRepository.save(charge);
+    }
+
     /**
      * 加入者を更新する
      * 
      * @param charge 更新する加入者情報
      * @return 更新した加入者情報
-     * */
-      @Override
-                public void deleteById(int chargeId) {
-               chargeRepository.deleteById(chargeId);
-                }
-     
+     */
+    @Override
+    public void deleteById(int chargeId) {
+        chargeRepository.deleteById(chargeId);
+    }
 }

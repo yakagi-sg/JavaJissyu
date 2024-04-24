@@ -40,14 +40,12 @@ public class ChargeController {
      * @param model Thymeleafに渡すデータ
      * @return 加入者検索条件画面のテンプレート名
      */
-
     @GetMapping("/search")
     public String showSearchCondition(Model model) {
         var chargeSearchCondition = new ChargeSearchCondition();
         model.addAttribute("chargeSearchCondition", chargeSearchCondition);
         return "charge_search_condition";
     }
-
 
     /**
      * 加入者検索結果画面を表示する
@@ -56,7 +54,6 @@ public class ChargeController {
      * @param model Thymeleafに渡すデータ
      * @return 加入者検索結果画面のテンプレート名
      */
-
     @PostMapping("/search")
     public String searchAndListing(
             @ModelAttribute("chargeSearchCondition") ChargeSearchCondition chargeSearchCodition,
@@ -66,7 +63,6 @@ public class ChargeController {
         return "charge_search_result";
     }
 
-
     /**
      * 加入者編集画面を表示する
      * 
@@ -74,20 +70,17 @@ public class ChargeController {
      * @param model Thymeleafに渡すデータ
      * @return 加入者編集画面のテンプレート名
      */
-
     @GetMapping("/edit/{id}")
     public String editCharge(
             @PathVariable int id,
             Model model) {
         var charge = chargeService.findById(id);
         if (!charge.isPresent()) {
-            throw new NotFoundException(String.format("指定したchargeId(%d)の加入者情報が存在しません。",
-                    id));
+            throw new NotFoundException(String.format("指定したchargeId(%d)の加入者情報が存在しません。", id));
         }
         model.addAttribute("charge", charge);
         return "charge_edit";
     }
-
 
     /**
      * 加入者追加画面を表示する
@@ -95,14 +88,12 @@ public class ChargeController {
      * @param model Thymeleafに渡すデータ
      * @return 加入者追加画面のテンプレート名
      */
-
     @GetMapping("/add")
     public String addCharge(Model model) {
         var charge = new Charge();
         model.addAttribute("charge", charge);
         return "charge_edit";
     }
-
 
     /**
      * 加入者情報を保存する
@@ -125,7 +116,6 @@ public class ChargeController {
         return "redirect:/charge/edit/" + charge.getChargeId();
     }
 
-
     /**
      * 加入者情報を削除する
      * 
@@ -139,13 +129,11 @@ public class ChargeController {
             RedirectAttributes redirectAttributes) {
         var charge = chargeService.findById(id);
         if (!charge.isPresent()) {
-            throw new NotFoundException(String.format("指定したchargeId(%d)の加入者情報が存在しません。",
-                    id));
+            throw new NotFoundException(String.format("指定したchargeId(%d)の加入者情報が存在しません。", id));
         }
 
         chargeService.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "削除しました。");
         return "redirect:/charge/search";
     }
-
 }

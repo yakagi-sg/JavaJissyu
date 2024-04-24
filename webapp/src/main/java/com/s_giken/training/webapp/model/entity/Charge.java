@@ -51,19 +51,14 @@ public class Charge {
     @Column(name = "charge_id")
     private int chargeId;
 
-    @Column(name = "mail")
-    @NotNull
-    @NotBlank
-    private String mail;
-
     @Column(name = "name")
     @NotNull
     @NotBlank
     private String name;
 
-    @Column(name = "address")
+    @Column(name = "sub")
     @NotNull
-    private String address;
+    private String sub;
 
     @Column(name = "start_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -74,9 +69,6 @@ public class Charge {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-    @Column(name = "payment_method")
-    @NotNull
-    private int paymentMethod;
 
     @CreatedDate
     private Timestamp createdDate;
@@ -84,3 +76,5 @@ public class Charge {
     @LastModifiedDate
     private Timestamp updatedDate;
 }
+
+

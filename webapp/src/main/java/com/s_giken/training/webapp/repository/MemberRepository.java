@@ -23,5 +23,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
      */
 
     // TODO: 名前でも検索できるようにメソッドを定義しなおす
-    public List<Member> findByMailLikeAndNameLike(String mail,String Name);
+    public List<Member> findByMailLikeAndNameLike(String mail, String name);
 }
