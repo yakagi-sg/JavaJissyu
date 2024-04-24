@@ -41,15 +41,15 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "T_MEMBER")
+@Table(name = "T_CHARGE")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Charge {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "member_id")
-    private int memberId;
+    @Column(name = "charge_id")
+    private int chargeId;
 
     @Column(name = "mail")
     @NotNull

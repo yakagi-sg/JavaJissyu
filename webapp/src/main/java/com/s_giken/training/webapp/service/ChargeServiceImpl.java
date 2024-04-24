@@ -4,24 +4,24 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import com.s_giken.training.webapp.model.entity.Member;
-import com.s_giken.training.webapp.model.entity.MemberSearchCondition;
-import com.s_giken.training.webapp.repository.MemberRepository;
+import com.s_giken.training.webapp.model.entity.Charge;
+import com.s_giken.training.webapp.model.entity.ChargeSearchCondition;
+import com.s_giken.training.webapp.repository.ChargeRepository;
 
 /**
  * 加入者管理機能のサービスクラス(実態クラス)
  */
 @Service
-public class ChargeServiceImpl implements MemberService {
-    private MemberRepository memberRepository;
+public class ChargeServiceImpl implements ChargeService {
+    private ChargeRepository chargeRepository;
 
     /**
      * 加入者管理機能のサービスクラスのコンストラクタ
      * 
-     * @param memberRepository 加入者管理機能のリポジトリクラス(SpringのDIコンテナから渡される)
+     * @param chargeRepository 加入者管理機能のリポジトリクラス(SpringのDIコンテナから渡される)
      */
-    public ChargeServiceImpl(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
+    public ChargeServiceImpl(ChargeRepository chargeRepository) {
+        this.chargeRepository = chargeRepository;
     }
 
     /**
@@ -30,55 +30,54 @@ public class ChargeServiceImpl implements MemberService {
      * @return 全加入者情報
      */
     @Override
-    public List<Member> findAll() {
-        return memberRepository.findAll();
+    public List<Charge> findAll() {
+        return chargeRepository.findAll();
     }
 
     /**
      * 加入者を1件取得する
      * 
-     * @param memberId 加入者ID
+     * @param chargeId 加入者ID
      * @return 加入者IDに一致した加入者情報
      */
     @Override
-    public Optional<Member> findById(int memberId) {
-        return memberRepository.findById(memberId);
+    public Optional<Charge> findById(int chargeId) {
+        return chargeRepository.findById(chargeId);
     }
 
     /**
      * 加入者を条件検索する
      * 
-     * @param memberSearchCondition 加入者検索条件
+     * @param chargeSearchCondition 加入者検索条件
      * @return 条件に一致した加入者情報
-     */
-    @Override
-    public List<Member> findByConditions(MemberSearchCondition memberSearchCondition) {
-        // TODO: 氏名検索用メソッドを呼び出すように修正
-        return memberRepository.findByMailLikeAndNameLike(
-                "%" + memberSearchCondition.getMail() + "%",
-                "%" + memberSearchCondition.getName() + "%");
-    }
-
-
-    /**
-     * 加入者を登録する
-     *
-     * @param member 登録する加入者情報
+      */
+      @Override
+               public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition) {
+               // TODO: 氏名検索用メソッドを呼び出すように修正
+               return chargeRepository.findAll();
+               }
+      
+      
+     /**
+     加入者を登録する
+     
+     * @param charge 登録する加入者情報
      * @return 登録した加入者情報
-     */
-    @Override
-    public void save(Member member) {
-        memberRepository.save(member);
-    }
-
+     *  */
+      @Override
+                public void save(Charge charge) {
+                chargeRepository.save(charge);
+                }
+    
     /**
      * 加入者を更新する
      * 
-     * @param member 更新する加入者情報
+     * @param charge 更新する加入者情報
      * @return 更新した加入者情報
-     */
-    @Override
-    public void deleteById(int memberId) {
-        memberRepository.deleteById(memberId);
-    }
+     * */
+      @Override
+                public void deleteById(int chargeId) {
+               chargeRepository.deleteById(chargeId);
+                }
+     
 }

@@ -2,12 +2,12 @@ package com.s_giken.training.webapp.service;
 
 import java.util.List;
 import java.util.Optional;
-import com.s_giken.training.webapp.model.entity.Member;
-//import com.s_giken.training.webapp.model.entity.MemberSearchCondition;
+import com.s_giken.training.webapp.model.entity.Charge;
+import com.s_giken.training.webapp.model.entity.ChargeSearchCondition;
 
 /*
  * 【ヒント】
- * MemberService をインターフェースとして定義することで、
+ * ChargeService をインターフェースとして定義することで、
  * インターフェースを実体化するクラスができることを明確化する。
  */
 
@@ -15,15 +15,13 @@ import com.s_giken.training.webapp.model.entity.Member;
  * 加入者管理機能のサービスインターフェース
  */
 public interface ChargeService {
-    public List<Member> findAll();
+    public List<Charge> findAll();
 
-    public Optional<Member> findById(int memberId);
+    public Optional<Charge> findById(int chargeId);
 
-    /*
-     * public List<Member> findByConditions(MemberSearchCondition memberSearchCondition);
-     * 
-     * public void save(Member member);
-     * 
-     * public void deleteById(int memberId);
-     */
+     public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition);
+
+   public void save(Charge charge);
+
+    public void deleteById(int chargeId);
 }
