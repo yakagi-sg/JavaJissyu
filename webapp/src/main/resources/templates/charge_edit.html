@@ -25,10 +25,17 @@
             </div>
         </div>
         <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label" for="startDate">適用終了日</label>
+            <label class="col-sm-2 col-form-label" for="startDate">加入日</label>
             <div class="col-sm-10">
                 <input type="date" class="form-control" th:field="*{startDate}" name="joining_date">
                 <span class="text-danger" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label" for="endDate">解約日</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" th:field="*{endDate}">
+                <span class="text-danger" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></span>
             </div>
         </div>
 

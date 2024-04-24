@@ -23,5 +23,5 @@ public interface ChargeRepository extends JpaRepository<Charge, Integer> {
      */
 
     // TODO: 名前でも検索できるようにメソッドを定義しなおす
-    public List<Charge> findByChargeLike(String name);
+    public List<Charge> findByNameLike(String name);
 }

@@ -54,7 +54,7 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition) {
         // TODO: 氏名検索用メソッドを呼び出すように修正
-        return chargeRepository.findByChargeLike("%" + chargeSearchCondition.getName() + "%");
+        return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%");
     }
 
 
