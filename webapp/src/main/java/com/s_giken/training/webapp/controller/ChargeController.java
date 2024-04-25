@@ -88,6 +88,7 @@ public class ChargeController {
      * @param model Thymeleafに渡すデータ
      * @return 加入者追加画面のテンプレート名
      */
+
     @GetMapping("/add")
     public String addCharge(Model model) {
         var charge = new Charge();

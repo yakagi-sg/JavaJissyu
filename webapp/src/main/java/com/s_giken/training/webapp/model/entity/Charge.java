@@ -66,7 +66,7 @@ public class Charge {
     private Date startDate;
 
     @Column(name = "end_date")
-    @DateTimeFormat(pattern = "yyyy-MM")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
 
