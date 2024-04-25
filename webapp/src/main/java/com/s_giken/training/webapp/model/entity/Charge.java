@@ -56,9 +56,9 @@ public class Charge {
     @NotBlank
     private String name;
 
-    @Column(name = "sub")
+    @Column(name = "amount")
     @NotNull
-    private String sub;
+    private int amount;
 
     @Column(name = "start_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -66,7 +66,7 @@ public class Charge {
     private Date startDate;
 
     @Column(name = "end_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM")
     private Date endDate;
 
 

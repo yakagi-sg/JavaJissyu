@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/app :: layout(${chargeId != null}?'加入者編集':'加入者新規追加', ~{::content}, 'charge')}">
+<html th:replace="~{layout/app :: layout(${chargeId != null}?'料金編集':'料金新規追加', ~{::content}, 'charge')}">
 <div th:fragment="content">
     <!--/*
         加入者情報編集画面
@@ -9,7 +9,6 @@
     </div>
     <form th:action="@{/charge/save}" th:object="${charge}" method="POST">
         <input type="hidden" th:field="*{chargeId}">
-
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label" for="name">料金名</label>
             <div class="col-sm-10">
@@ -18,10 +17,10 @@
             </div>
         </div>
         <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label" for="sub">月額料金</label>
+            <label class="col-sm-2 col-form-label" for="amount">月額料金</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{sub}">
-                <span class="text-danger" th:if="${#fields.hasErrors('sub')}" th:errors="*{sub}"></span>
+                <input type="text" class="form-control" th:field="*{amount}">
+                <span class="text-danger" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
             </div>
         </div>
         <div class="mb-3 row">
