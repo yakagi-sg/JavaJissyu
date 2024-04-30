@@ -74,12 +74,15 @@ public class MemberController {
 	public String editMember(
 			@PathVariable int id,
 			Model model) {
-		var member = memberService.findById(id);
-		if (!member.isPresent()) {
+		var memberOptional = memberService.findById(id);
+		if (memberOptional.isPresent()) {
+			var member = memberOptional.get(); // OptionalからMemberオブジェクトを取得
+			model.addAttribute("member", member);
+			model.addAttribute("memberId", member.getMemberId()); // memberIdを取得してモデルに追加
+			return "member_edit";
+		} else {
 			throw new NotFoundException(String.format("指定したmemberId(%d)の加入者情報が存在しません。", id));
 		}
-		model.addAttribute("member", member);
-		return "member_edit";
 	}
 
 	/**

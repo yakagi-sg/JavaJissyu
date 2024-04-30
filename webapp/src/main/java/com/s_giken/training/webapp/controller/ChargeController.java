@@ -74,13 +74,17 @@ public class ChargeController {
     public String editCharge(
             @PathVariable int id,
             Model model) {
-        var charge = chargeService.findById(id);
-        if (!charge.isPresent()) {
+        var chargeOptional = chargeService.findById(id);
+        if (chargeOptional.isPresent()) {
+            var charge = chargeOptional.get(); // OptionalからChargeオブジェクトを取得
+            model.addAttribute("charge", charge);
+            model.addAttribute("chargeId", charge.getChargeId()); // chargeIdを取得してモデルに追加
+            return "charge_edit";
+        } else {
             throw new NotFoundException(String.format("指定したchargeId(%d)の加入者情報が存在しません。", id));
         }
-        model.addAttribute("charge", charge);
-        return "charge_edit";
     }
+
 
     /**
      * 加入者追加画面を表示する
