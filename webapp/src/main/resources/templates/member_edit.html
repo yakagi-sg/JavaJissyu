@@ -57,9 +57,12 @@
         </div>
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
+            <div class="col-sm-8">
                 <button type="submit" class="btn btn-primary">保存</button>
                 <a class="btn btn-link" th:href="@{/member/search}">キャンセル</a>
+            </div>
+            <div th:if="${memberId != null}" class="col-sm-2 text-end">
+                <a class="btn btn-secondary" id="delete" th:href="@{/member/delete/{id}(id=${memberId})}">削除</a>
             </div>
         </div>
     </form>
@@ -84,4 +87,5 @@
         });
     </script>
 </div>
+
 </html>
