@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/app :: layout('料金検索', ~{::content}, 'charge')}">
 <div th:fragment="content">
+
+    <div th:if="!${#strings.isEmpty(message)}" class="alert alert-success">
+        <span th:text="${message}"></span>
+    </div>
     <!--/* 加入者情報検索画面 */-->
     <form th:action="@{/charge/search}" th:object="${chargeSearchCondition}" method="POST">
         <!--/* 料金名 */-->

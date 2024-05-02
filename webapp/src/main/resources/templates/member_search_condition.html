@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/app :: layout('加入者検索', ~{::content}, 'member')}">
 <div th:fragment="content">
+
+  <div th:if="!${#strings.isEmpty(message)}" class="alert alert-success">
+    <span th:text="${message}"></span>
+  </div>
   <!--/* 加入者情報検索画面 */-->
   <form th:action="@{/member/search}" th:object="${memberSearchCondition}" method="POST">
     <!--/* メールアドレス */-->
@@ -8,6 +12,7 @@
       <label class="col-sm-2 col-form-label" for="mail">メールアドレス</label>
       <div class="col-sm-10">
         <input class="form-control" type="text" th:field="*{mail}" />
+        <p>※半角英数字で入力して下さい</p>
       </div>
     </div>
 
