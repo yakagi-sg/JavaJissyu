@@ -2,7 +2,7 @@ package com.s_giken.training.webapp.service;
 
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.s_giken.training.webapp.model.entity.Charge;
 import com.s_giken.training.webapp.model.entity.ChargeSearchCondition;
@@ -53,9 +53,19 @@ public class ChargeServiceImpl implements ChargeService {
      */
     @Override
     public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition) {
-        // TODO: 氏名検索用メソッドを呼び出すように修正
-        return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%");
+        if (chargeSearchCondition == null) {
+            return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%");
+        } else {
+
+            Sort sort = Sort.by(
+                    Sort.Direction.fromString(chargeSearchCondition.getSortDirection()),
+                    chargeSearchCondition.getColumn());
+
+            return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%",
+                    sort);
+        }
     }
+
 
 
     /**

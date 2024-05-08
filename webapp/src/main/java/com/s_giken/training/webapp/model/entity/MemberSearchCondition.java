@@ -12,4 +12,6 @@ public class MemberSearchCondition {
     private String mail;
     // TODO: 氏名検索用メンバ変数を用意
     private String name;
+    private String sortDirection;
+    private String column;
 }
