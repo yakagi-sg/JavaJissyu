@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // 引数のないコンストラクタを自動生成
 @AllArgsConstructor // 全てのメンバ変数に対する引数を持つコンストラクタを自動生成
 public class MemberSearchCondition {
-    // メールアドレス検索用
+
     private String mail;
-    // TODO: 氏名検索用メンバ変数を用意
     private String name;
     private String sortDirection;
     private String column;
