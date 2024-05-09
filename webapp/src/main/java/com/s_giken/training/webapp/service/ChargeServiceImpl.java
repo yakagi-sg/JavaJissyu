@@ -53,17 +53,12 @@ public class ChargeServiceImpl implements ChargeService {
      */
     @Override
     public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition) {
-        if (chargeSearchCondition == null) {
-            return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%");
-        } else {
+        Sort sort = Sort.by(
+                Sort.Direction.fromString(chargeSearchCondition.getSortDirection()),
+                chargeSearchCondition.getColumn());
 
-            Sort sort = Sort.by(
-                    Sort.Direction.fromString(chargeSearchCondition.getSortDirection()),
-                    chargeSearchCondition.getColumn());
-
-            return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%",
-                    sort);
-        }
+        return chargeRepository.findByNameLike("%" + chargeSearchCondition.getName() + "%",
+                sort);
     }
 
 

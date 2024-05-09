@@ -54,22 +54,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<Member> findByConditions(MemberSearchCondition memberSearchCondition) {
         // TODO: 氏名検索用メソッドを呼び出すように修正
-        if (memberSearchCondition == null) {
-            return memberRepository.findByMailLikeAndNameLike(
-                    "%" + memberSearchCondition.getName() + "%",
-                    "%" + memberSearchCondition.getMail() + "%");
-        } else {
+        Sort sort = Sort.by(
+                Sort.Direction.fromString(memberSearchCondition.getSortDirection()),
+                memberSearchCondition.getColumn());
 
-            Sort sort = Sort.by(
-                    Sort.Direction.fromString(memberSearchCondition.getSortDirection()),
-                    memberSearchCondition.getColumn());
-
-            return memberRepository.findByMailLikeAndNameLike(
-                    "%" + memberSearchCondition.getName() + "%",
-                    "%" + memberSearchCondition.getMail() + "%",
-                    sort);
-        }
+        return memberRepository.findByMailLikeAndNameLike(
+                "%" + memberSearchCondition.getName() + "%",
+                "%" + memberSearchCondition.getMail() + "%",
+                sort);
     }
+
 
 
     /**
