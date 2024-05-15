@@ -18,10 +18,13 @@ import java.sql.Timestamp;
 public class BatchApplication implements CommandLineRunner {
 	private final Logger logger = LoggerFactory.getLogger(BatchApplication.class);
 	private final JdbcTemplate jdbcTemplate;
+	
 	//挿入レコード数取得用変数
+	int count = 0;
+	int statusCount = 0;
 	int memberCount = 0;
 	int chargeCount = 0;
-	int count = 0;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(BatchApplication.class, args);
@@ -31,6 +34,7 @@ public class BatchApplication implements CommandLineRunner {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	
 	public void countRecord(LocalDate localDate) {
 		//請求データ状況に該当の請求年月で確定状況がTRUEのレコード数をカウント
 		int count = jdbcTemplate.queryForObject(
@@ -56,9 +60,10 @@ public class BatchApplication implements CommandLineRunner {
 
 	public void insertBillingStatus(LocalDate localDate) {
 		//請求データ状況に入力された請求年月と確定状況falseのレコードを挿入
-		jdbcTemplate.update(
+		int statusCount = jdbcTemplate.update(
 				"INSERT INTO T_BILLING_STATUS(billing_ym, is_commit) VALUES (?, ?)",
 				java.sql.Date.valueOf(localDate), false);
+		this.statusCount = statusCount;
 	}
 
 	public void insertBillingDataAndDetailData(LocalDate localDate) {
@@ -153,7 +158,7 @@ public class BatchApplication implements CommandLineRunner {
 			logger.info(year + "年" + month + "月分の請求ステータス情報を追加しています。");
 
 			insertBillingStatus(localDate);
-			logger.info("1件追加しました。");
+			logger.info(statusCount + "件追加しました。");
 
 			logger.info(year + "年" + month + "月分の請求データ情報を追加しています。");
 
@@ -161,7 +166,9 @@ public class BatchApplication implements CommandLineRunner {
 
 			//請求データの挿入レコード数
 			logger.info(memberCount + "件追加しました。");
+
 			logger.info(year + "年" + month + "月分の請求明細データ情報を追加しています。");
+
 			//請求明細データの挿入レコード数
 			logger.info(chargeCount + "件追加しました。");
 		} catch (DataAccessException e) {
