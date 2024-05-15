@@ -12,18 +12,20 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
+import java.sql.Date;
 
 
 @SpringBootApplication
 public class BatchApplication implements CommandLineRunner {
 	private final Logger logger = LoggerFactory.getLogger(BatchApplication.class);
 	private final JdbcTemplate jdbcTemplate;
-	
+
 	//挿入レコード数取得用変数
-	int count = 0;
-	int statusCount = 0;
-	int memberCount = 0;
-	int chargeCount = 0;
+	private int count = 0;
+	private int statusCount = 0;
+	private int memberCount = 0;
+	private int chargeCount = 0;
+	private Date date;
 
 
 	public static void main(String[] args) {
@@ -34,35 +36,34 @@ public class BatchApplication implements CommandLineRunner {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	
+
 	public void countRecord(LocalDate localDate) {
 		//請求データ状況に該当の請求年月で確定状況がTRUEのレコード数をカウント
 		int count = jdbcTemplate.queryForObject(
 				"SELECT COUNT(*) FROM T_BILLING_STATUS WHERE billing_ym = ? AND is_commit = TRUE",
-				Integer.class,
-				java.sql.Date.valueOf(localDate));
+				Integer.class, date);
 		this.count = count;
 	}
 
 	public void deleteBillingData(LocalDate localDate) {
 		//請求明細データから該当する請求年月のレコードを削除
 		jdbcTemplate.update("DELETE FROM T_BILLING_DETAIL_DATA WHERE billing_ym = ?",
-				java.sql.Date.valueOf(localDate));
+				date);
 
 		//請求データから該当する請求年月のレコードを削除
 		jdbcTemplate.update("DELETE FROM T_BILLING_DATA WHERE billing_ym = ?",
-				java.sql.Date.valueOf(localDate));
+				date);
 
 		//請求データ状況から該当する請求年月のレコードを削除
 		jdbcTemplate.update("DELETE FROM T_BILLING_STATUS WHERE billing_ym = ?",
-				java.sql.Date.valueOf(localDate));
+				date);
 	}
 
 	public void insertBillingStatus(LocalDate localDate) {
 		//請求データ状況に入力された請求年月と確定状況falseのレコードを挿入
 		int statusCount = jdbcTemplate.update(
 				"INSERT INTO T_BILLING_STATUS(billing_ym, is_commit) VALUES (?, ?)",
-				java.sql.Date.valueOf(localDate), false);
+				date, false);
 		this.statusCount = statusCount;
 	}
 
@@ -70,20 +71,20 @@ public class BatchApplication implements CommandLineRunner {
 		//chargeテーブルのリストを取得
 		List<Map<String, Object>> charge = jdbcTemplate.queryForList(
 				"SELECT * FROM T_CHARGE WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
-				java.sql.Date.valueOf(localDate),
-				java.sql.Date.valueOf(localDate));
+				date,
+				date);
 
 		//memberテーブルのリストを取得
 		List<Map<String, Object>> member = jdbcTemplate.queryForList(
 				"SELECT * FROM T_MEMBER WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
-				java.sql.Date.valueOf(localDate),
-				java.sql.Date.valueOf(localDate));
+				date,
+				date);
 
 		//料金合計のオブジェクト作成
 		int total = jdbcTemplate.queryForObject(
 				"SELECT SUM(amount) FROM T_CHARGE WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
-				Integer.class, java.sql.Date.valueOf(localDate),
-				java.sql.Date.valueOf(localDate));
+				Integer.class, date,
+				date);
 
 
 		for (Map<String, Object> memberRow : member) {
@@ -98,7 +99,7 @@ public class BatchApplication implements CommandLineRunner {
 			//請求データを挿入
 			int memberCounting = jdbcTemplate.update(
 					"INSERT INTO T_BILLING_DATA(billing_ym, member_id, mail, name, address, start_date, end_date, payment_method, amount, tax_ratio, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-					java.sql.Date.valueOf(localDate), memberId, memberMail, memberName,
+					date, memberId, memberMail, memberName,
 					memberAddress, memberStartDate, memberEndDate, paymentMethod, total,
 					0.1, (total + (total * 0.1)));
 			memberCount += memberCounting;
@@ -113,7 +114,7 @@ public class BatchApplication implements CommandLineRunner {
 				//請求明細データを挿入
 				int chargeCounting = jdbcTemplate.update(
 						"INSERT INTO T_BILLING_DETAIL_DATA(billing_ym, member_id, charge_id, name, amount, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-						java.sql.Date.valueOf(localDate), memberId, chargeId, chargeName,
+						date, memberId, chargeId, chargeName,
 						amount, chargeStartDate, chargeEndDate);
 				chargeCount += chargeCounting;
 			}
@@ -130,7 +131,6 @@ public class BatchApplication implements CommandLineRunner {
 		int yearNum = Integer.parseInt(year);
 		int monthNum = Integer.parseInt(month);
 
-
 		//入力値の条件指定
 		if (args.length != 1 || !args[0].matches("^\\d{6}$")) {
 			logger.info("正しい形式で年月を入力してください。");
@@ -143,6 +143,8 @@ public class BatchApplication implements CommandLineRunner {
 		try {
 			//LocalDate型にキャスト
 			LocalDate localDate = LocalDate.of(yearNum, monthNum, 1);
+			Date date = Date.valueOf(localDate);
+			this.date = date;
 			countRecord(localDate);
 
 			if (count > 0) {
