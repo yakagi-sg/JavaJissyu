@@ -101,6 +101,8 @@ public class BatchApplication implements CommandLineRunner {
 						Integer.class, java.sql.Date.valueOf(localDate),
 						java.sql.Date.valueOf(localDate));
 
+
+
 				//挿入レコード数取得用変数
 				int memberCount = 0;
 				int chargeCount = 0;
@@ -157,7 +159,9 @@ public class BatchApplication implements CommandLineRunner {
 			result.forEach(row -> logger.info(row.toString()));
 
 		} catch (DataAccessException e) {
-			logger.error("データベースアクセス中にエラーが発生しました。", e);
+			logger.error("データベースアクセス中にエラーが発生しました。");
+		} catch (NullPointerException e) {
+			logger.error("料金情報が存在しませんでした。");
 		}
 
 		logger.info("-".repeat(40));
