@@ -20,11 +20,6 @@ public class BatchApplication implements CommandLineRunner {
 	private final Logger logger = LoggerFactory.getLogger(BatchApplication.class);
 	private final JdbcTemplate jdbcTemplate;
 
-	//挿入レコード数取得用変数
-	private int count = 0;
-	private int statusCount = 0;
-	private int memberCount = 0;
-	private int chargeCount = 0;
 
 
 	public static void main(String[] args) {
@@ -36,12 +31,12 @@ public class BatchApplication implements CommandLineRunner {
 	}
 
 
-	public void countRecord(Date date) {
+	public int countBillingStatusRecord(Date date) {
 		//請求データ状況に該当の請求年月で確定状況がTRUEのレコード数をカウント
 		int count = jdbcTemplate.queryForObject(
 				"SELECT COUNT(*) FROM T_BILLING_STATUS WHERE billing_ym = ? AND is_commit = TRUE",
 				Integer.class, date);
-		this.count = count;
+		return count;
 	}
 
 	public void deleteBillingData(Date date) {
@@ -58,15 +53,29 @@ public class BatchApplication implements CommandLineRunner {
 				date);
 	}
 
-	public void insertBillingStatus(Date date) {
+	public int insertBillingStatus(Date date) {
 		//請求データ状況に入力された請求年月と確定状況falseのレコードを挿入
 		int statusCount = jdbcTemplate.update(
 				"INSERT INTO T_BILLING_STATUS(billing_ym, is_commit) VALUES (?, ?)",
 				date, false);
-		this.statusCount = statusCount;
+		return statusCount;
 	}
 
-	public void insertBillingDataAndDetailData(Date date) {
+	public class countInsertBillingDataAndDetailData {
+		private int memberCount;
+		private int chargeCount;
+
+		public countInsertBillingDataAndDetailData(int memberCount, int chargeCount) {
+			this.memberCount = memberCount;
+			this.chargeCount = chargeCount;
+
+		}
+	}
+
+	public countInsertBillingDataAndDetailData insertBillingDataAndDetailData(Date date) {
+		int memberCount = 0;
+		int chargeCount = 0;
+
 		//chargeテーブルのリストを取得
 		List<Map<String, Object>> charge = jdbcTemplate.queryForList(
 				"SELECT * FROM T_CHARGE WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
@@ -118,6 +127,7 @@ public class BatchApplication implements CommandLineRunner {
 				chargeCount += chargeCounting;
 			}
 		}
+		return new countInsertBillingDataAndDetailData(memberCount, chargeCount);
 	}
 
 	@Override
@@ -130,7 +140,7 @@ public class BatchApplication implements CommandLineRunner {
 		int yearNum = Integer.parseInt(year);
 		int monthNum = Integer.parseInt(month);
 
-		//入力値の条件指定
+		//入力値の条件指定 
 		if (args.length != 1 || !args[0].matches("^\\d{6}$")) {
 			logger.info("正しい形式で年月を入力してください。");
 			return;
@@ -140,10 +150,10 @@ public class BatchApplication implements CommandLineRunner {
 		}
 
 		try {
-			//LocalDate型にキャスト
 			LocalDate localDate = LocalDate.of(yearNum, monthNum, 1);
 			Date date = Date.valueOf(localDate);
-			countRecord(date);
+
+			int count = countBillingStatusRecord(date);
 
 			if (count > 0) {
 				logger.info("指定された年月の請求情報は既に存在します。");
@@ -157,20 +167,22 @@ public class BatchApplication implements CommandLineRunner {
 
 			logger.info(year + "年" + month + "月分の請求ステータス情報を追加しています。");
 
-			insertBillingStatus(date);
+			int statusCount = insertBillingStatus(date);
 			logger.info(statusCount + "件追加しました。");
 
 			logger.info(year + "年" + month + "月分の請求データ情報を追加しています。");
 
-			insertBillingDataAndDetailData(date);
+			countInsertBillingDataAndDetailData countInsertlData =
+					insertBillingDataAndDetailData(date);
+
 
 			//請求データの挿入レコード数
-			logger.info(memberCount + "件追加しました。");
+			logger.info(countInsertlData.memberCount + "件追加しました。");
 
 			logger.info(year + "年" + month + "月分の請求明細データ情報を追加しています。");
 
 			//請求明細データの挿入レコード数
-			logger.info(chargeCount + "件追加しました。");
+			logger.info(countInsertlData.chargeCount + "件追加しました。");
 		} catch (DataAccessException e) {
 			logger.error("データベースアクセス中にエラーが発生しました。");
 		} catch (NullPointerException e) {
