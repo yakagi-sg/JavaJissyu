@@ -145,14 +145,14 @@ public class BatchApplication implements CommandLineRunner {
 			yearNum = Integer.parseInt(year);
 			monthNum = Integer.parseInt(month);
 		} catch (NumberFormatException e) {
-			logger.error("正しい形式で年月を入力してください。");
+			logger.error("数字をyyyyMMの形式で入力してください。");
 			logger.info("-".repeat(40));
 			return;
 		}
 
 		//入力値の条件指定 
 		if (args.length != 1 || !args[0].matches("^\\d{6}$")) {
-			logger.info("正しい形式で年月を入力してください。");
+			logger.info("yyyyMMの形式で年月を入力してください。");
 			logger.info("-".repeat(40));
 			return;
 		}
@@ -197,8 +197,7 @@ public class BatchApplication implements CommandLineRunner {
 		} catch (NullPointerException e) {
 			logger.error("有効な料金情報が存在しませんでした。");
 		} catch (DateTimeException e) {
-			logger.error("正しい形式で年月を入力してください。");
-			logger.info("-".repeat(40));
+			logger.error("正しい年月を入力してください。");
 		}
 		logger.info("-".repeat(40));
 	}
