@@ -134,59 +134,72 @@ public class BatchApplication implements CommandLineRunner {
 	@Transactional
 	public void run(String... args) throws RuntimeException {
 		logger.info("-".repeat(40));
-		String inputDate = args[0];
-		String year = inputDate.substring(0, 4);
-		String month = inputDate.substring(4);
-		int yearNum = Integer.parseInt(year);
-		int monthNum = Integer.parseInt(month);
-
-		//入力値の条件指定 
-		if (args.length != 1 || !args[0].matches("^\\d{6}$")) {
-			logger.info("正しい形式で年月を入力してください。");
-			return;
-		} else if (monthNum > 12 || monthNum < 1) {
-			logger.info("正しい形式で年月を入力してください。");
-			return;
-		}
 
 		try {
-			LocalDate localDate = LocalDate.of(yearNum, monthNum, 1);
-			Date date = Date.valueOf(localDate);
+			String inputDate = args[0];
+			String year = inputDate.substring(0, 4);
+			String month = inputDate.substring(4);
+			int yearNum = Integer.parseInt(year);
+			int monthNum = Integer.parseInt(month);
 
-			int count = countBillingStatusRecord(date);
 
-			if (count > 0) {
-				logger.info("指定された年月の請求情報は既に存在します。");
+
+			//入力値の条件指定 
+			if (args.length != 1 || !args[0].matches("^\\d{6}$")) {
+				logger.info("正しい形式で年月を入力してください。");
+				logger.info("-".repeat(40));
+				return;
+			} else if (monthNum > 12 || monthNum < 1) {
+				logger.info("正しい形式で年月を入力してください。");
+				logger.info("-".repeat(40));
 				return;
 			}
 
-			logger.info(year + "年" + month + "月分の請求情報を確認しています。");
-
-			deleteBillingData(date);
-			logger.info("データベースから" + year + "年" + month + "月分の未確定請求情報を削除しました.");
-
-			logger.info(year + "年" + month + "月分の請求ステータス情報を追加しています。");
-
-			int statusCount = insertBillingStatus(date);
-			logger.info(statusCount + "件追加しました。");
-
-			logger.info(year + "年" + month + "月分の請求データ情報を追加しています。");
-
-			countInsertBillingDataAndDetailData countInsertlData =
-					insertBillingDataAndDetailData(date);
+			try {
+				LocalDate localDate = LocalDate.of(yearNum, monthNum, 1);
+				Date date = Date.valueOf(localDate);
+				int count = countBillingStatusRecord(date);
 
 
-			//請求データの挿入レコード数
-			logger.info(countInsertlData.memberCount + "件追加しました。");
 
-			logger.info(year + "年" + month + "月分の請求明細データ情報を追加しています。");
+				if (count > 0) {
+					logger.info("指定された年月の請求情報は既に存在します。");
+					return;
+				}
+				logger.info(year + "年" + month + "月分の請求情報を確認しています。");
 
-			//請求明細データの挿入レコード数
-			logger.info(countInsertlData.chargeCount + "件追加しました。");
-		} catch (DataAccessException e) {
-			logger.error("データベースアクセス中にエラーが発生しました。");
-		} catch (NullPointerException e) {
-			logger.error("料金情報が存在しませんでした。");
+				deleteBillingData(date);
+				logger.info("データベースから" + year + "年" + month + "月分の未確定請求情報を削除しました.");
+
+				logger.info(year + "年" + month + "月分の請求ステータス情報を追加しています。");
+
+				int statusCount = insertBillingStatus(date);
+				logger.info(statusCount + "件追加しました。");
+
+				logger.info(year + "年" + month + "月分の請求データ情報を追加しています。");
+				countInsertBillingDataAndDetailData countInsertlData =
+						insertBillingDataAndDetailData(date);
+
+				if (countInsertlData.memberCount == 0) {
+					logger.error("有効な加入者情報が存在しませんでした。");
+					logger.info("-".repeat(40));
+					return;
+				}
+				//請求データの挿入レコード数
+				logger.info(countInsertlData.memberCount + "件追加しました。");
+
+				logger.info(year + "年" + month + "月分の請求明細データ情報を追加しています。");
+
+				//請求明細データの挿入レコード数
+				logger.info(countInsertlData.chargeCount + "件追加しました。");
+
+			} catch (DataAccessException e) {
+				logger.error("データベースアクセス中にエラーが発生しました。");
+			} catch (NullPointerException e) {
+				logger.error("有効な料金情報が存在しませんでした。");
+			}
+		} catch (NumberFormatException e) {
+			logger.error("正しい形式で年月を入力してください。");
 		}
 		logger.info("-".repeat(40));
 	}
