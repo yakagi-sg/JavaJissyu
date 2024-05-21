@@ -59,7 +59,9 @@ public class ChargeController {
             @ModelAttribute("chargeSearchCondition") ChargeSearchCondition chargeSearchCodition,
             Model model) {
         var result = chargeService.findByConditions(chargeSearchCodition);
+        int count = result.size();
         model.addAttribute("result", result);
+        model.addAttribute("count", count);
         return "charge_search_result";
     }
 

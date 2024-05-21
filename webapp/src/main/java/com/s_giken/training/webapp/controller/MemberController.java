@@ -59,7 +59,9 @@ public class MemberController {
 			@ModelAttribute("memberSearchCondition") MemberSearchCondition memberSearchCodition,
 			Model model) {
 		var result = memberService.findByConditions(memberSearchCodition);
+		int count = result.size();
 		model.addAttribute("result", result);
+		model.addAttribute("count", count);
 		return "member_search_result";
 	}
 

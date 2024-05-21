@@ -9,6 +9,11 @@
             <a class="btn btn-secondary" th:href="@{/member/search}">戻る</a>
         </div>
     </div>
+    <div class="row">
+        <div class="col-auto">
+            <p>検索結果: <span th:text="${count}"></span> 件</p>
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
