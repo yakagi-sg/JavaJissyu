@@ -59,8 +59,8 @@ public class MemberServiceImpl implements MemberService {
                 memberSearchCondition.getColumn());
 
         return memberRepository.findByMailLikeAndNameLike(
-                "%" + memberSearchCondition.getName() + "%",
                 "%" + memberSearchCondition.getMail() + "%",
+                "%" + memberSearchCondition.getName() + "%",
                 sort);
     }
 
