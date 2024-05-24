@@ -2,5 +2,44 @@
 <html th:replace="~{layout/app :: layout('トップ', ~{::content}, 'top')}">
 <div th:fragment="content">
     <p>上部メニューより機能を選択してください。</p>
+
+    <div class="row">
+        <div class="col-auto">
+            <p><span th:text="${#dates.format(#dates.createNow(), 'yyyy/MM/dd(E)')}"></span></p>
+        </div>
+    </div>
+    <form th:action="@{//}" th:object="${chargeSearchCondition}" method="POST">
+        <div class="row">
+            <div class="col-auto">
+                <p>今月請求予定: <span th:text="${count}"></span> 件</p>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td scope="col">料金番号</td>
+                    <td scope="col">料金名</td>
+                    <td scope="col">月額料金</td>
+                    <td scope="col">適用開始日</td>
+                    <td scope="col">適用終了日</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${!#lists.isEmpty(chargeSearchCondition)}" th:each="row : ${chargeSearchCondition}">
+                    <td th:text="${row.chargeId}"></td>
+                    <td th:text="${row.name}"></td>
+                    <td th:text="${row.amount}"></td>
+                    <td th:text="${#dates.format(row.startDate, 'yyyy/MM/dd')}"></td>
+                    <td th:text="${#dates.format(row.endDate, 'yyyy/MM/dd')}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(chargeSearchCondition)}">
+                    <td colspan="7">
+                        <div class="text-center lh-lg">該当する情報が見つかりませんでした。</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>
+
 </html>
