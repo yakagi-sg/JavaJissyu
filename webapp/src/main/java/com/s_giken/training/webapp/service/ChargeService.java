@@ -21,6 +21,10 @@ public interface ChargeService {
 
     public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition);
 
+    List<Charge> findChargesForMonth(String year, String month);
+
+    List<Charge> findChargesForNextMonth(String year, String month);
+
     public void save(Charge charge);
 
     public void deleteById(int chargeId);

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import com.s_giken.training.webapp.model.entity.Charge;
 import com.s_giken.training.webapp.model.entity.ChargeSearchCondition;
 import com.s_giken.training.webapp.repository.ChargeRepository;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  * 加入者管理機能のサービスクラス(実態クラス)
@@ -61,7 +64,71 @@ public class ChargeServiceImpl implements ChargeService {
                 sort);
     }
 
+    @Override
+    public List<Charge> findChargesForMonth(String year, String month) {
+        var chargeSearchCondition = chargeRepository.findAll();
+        List<Charge> chargeList = new ArrayList<>();
+        for (Charge charge : chargeSearchCondition) {
+            int date = Integer.parseInt(year + month);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+            Date beforeFormatStartDate = charge.getStartDate();
+            String formatStartDate = sdf.format(beforeFormatStartDate);
+            int startDate = Integer.parseInt(formatStartDate);
 
+            Date beforeFormatEndDate = charge.getEndDate();
+            String formatEndDate = null;
+            int endDate = 0;
+            if (beforeFormatEndDate != null) {
+                formatEndDate = sdf.format(beforeFormatEndDate);
+            }
+            if (formatEndDate != null) {
+                endDate = Integer.parseInt(formatEndDate);
+            }
+            if (startDate <= date && (endDate == 0 || endDate >= date)) {
+                chargeList.add(charge);
+            }
+        }
+        return chargeList;
+    }
+
+    @Override
+    public List<Charge> findChargesForNextMonth(String year, String month) {
+        var chargeSearchCondition = chargeRepository.findAll();
+        List<Charge> nextChargeList = new ArrayList<>();
+
+        for (Charge charge : chargeSearchCondition) {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+            Date beforeFormatStartDate = charge.getStartDate();
+            String formatStartDate = sdf.format(beforeFormatStartDate);
+            int startDate = Integer.parseInt(formatStartDate);
+            Date beforeFormatEndDate = charge.getEndDate();
+            String formatEndDate = null;
+            int endDate = 0;
+
+            int nextYear = Integer.parseInt(year);
+            int nextMonth = Integer.parseInt(month) + 1;
+            if (nextMonth > 12) {
+                nextMonth = 1;
+                nextYear++;
+            }
+            String nextYearStr = String.valueOf(nextYear);
+            String nextMonthStr = String.format("%02d", nextMonth);
+            int nextDate = Integer.parseInt(nextYearStr + nextMonthStr);
+
+            if (beforeFormatEndDate != null) {
+                formatEndDate = sdf.format(beforeFormatEndDate);
+            }
+            if (formatEndDate != null) {
+                endDate = Integer.parseInt(formatEndDate);
+            }
+            if (startDate <= nextDate && (endDate == 0 || endDate >= nextDate)) {
+                nextChargeList.add(charge);
+            }
+        }
+
+        return nextChargeList;
+    }
 
     /**
      * 加入者を登録する
