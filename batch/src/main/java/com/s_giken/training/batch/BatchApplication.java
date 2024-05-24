@@ -22,7 +22,6 @@ public class BatchApplication implements CommandLineRunner {
 	private final JdbcTemplate jdbcTemplate;
 
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(BatchApplication.class, args);
 	}
@@ -73,27 +72,25 @@ public class BatchApplication implements CommandLineRunner {
 		}
 	}
 
-	public countInsertBillingDataAndDetailData insertBillingDataAndDetailData(Date date) {
+	public countInsertBillingDataAndDetailData insertBillingDataAndDetailData(Date date,
+			Date lastDate) {
 		int memberCount = 0;
 		int chargeCount = 0;
 
 		//chargeテーブルのリストを取得
 		List<Map<String, Object>> charge = jdbcTemplate.queryForList(
 				"SELECT * FROM T_CHARGE WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
-				date,
-				date);
+				lastDate, date);
 
 		//memberテーブルのリストを取得
 		List<Map<String, Object>> member = jdbcTemplate.queryForList(
 				"SELECT * FROM T_MEMBER WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
-				date,
-				date);
+				lastDate, date);
 
 		//料金合計のオブジェクト作成
 		int total = jdbcTemplate.queryForObject(
 				"SELECT SUM(amount) FROM T_CHARGE WHERE start_date <= ? AND (end_date IS NULL OR end_date >= ?) ",
-				Integer.class, date,
-				date);
+				Integer.class, lastDate, date);
 
 
 		for (Map<String, Object> memberRow : member) {
@@ -157,8 +154,11 @@ public class BatchApplication implements CommandLineRunner {
 			return;
 		}
 		try {
-			LocalDate localDate = LocalDate.of(yearNum, monthNum, 1);
-			Date date = Date.valueOf(localDate);
+			LocalDate firstLocalDate = LocalDate.of(yearNum, monthNum, 1);
+			LocalDate lastDayOfMonth =
+					firstLocalDate.withDayOfMonth(firstLocalDate.lengthOfMonth());
+			Date date = Date.valueOf(firstLocalDate);
+			Date lastDate = Date.valueOf(lastDayOfMonth);
 			int count = countBillingStatusRecord(date);
 
 			if (count > 0) {
@@ -177,7 +177,7 @@ public class BatchApplication implements CommandLineRunner {
 
 			logger.info(year + "年" + month + "月分の請求データ情報を追加しています。");
 			countInsertBillingDataAndDetailData countInsertlData =
-					insertBillingDataAndDetailData(date);
+					insertBillingDataAndDetailData(date, lastDate);
 
 			if (countInsertlData.memberCount == 0) {
 				logger.error("有効な加入者情報が存在しませんでした。");
@@ -202,4 +202,3 @@ public class BatchApplication implements CommandLineRunner {
 		logger.info("-".repeat(40));
 	}
 }
-
