@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import com.s_giken.training.webapp.model.entity.Charge;
 import com.s_giken.training.webapp.model.entity.ChargeSearchCondition;
-
+import java.time.LocalDate;
 /*
  * 【ヒント】
  * ChargeService をインターフェースとして定義することで、
@@ -21,11 +21,11 @@ public interface ChargeService {
 
     public List<Charge> findByConditions(ChargeSearchCondition chargeSearchCondition);
 
-    List<Charge> findChargesForMonth(String year, String month);
-
-    List<Charge> findChargesForNextMonth(String year, String month);
-
     public void save(Charge charge);
 
     public void deleteById(int chargeId);
+
+    public List<Charge> findByStartDateAndEndDate(LocalDate today, LocalDate lastDayOfMonth);
+    
+    public List<Charge> findByNextStartDateAndEndDate(LocalDate todayOfNextMonth, LocalDate lastDayOfNextMonth);
 }

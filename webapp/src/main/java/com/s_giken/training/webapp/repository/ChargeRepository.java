@@ -4,7 +4,10 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.s_giken.training.webapp.model.entity.Charge;
+
+import java.util.Date;
 
 public interface ChargeRepository extends JpaRepository<Charge, Integer> {
     /*
@@ -26,4 +29,7 @@ public interface ChargeRepository extends JpaRepository<Charge, Integer> {
     public List<Charge> findByNameLike(String name);
 
     public List<Charge> findByNameLike(String name, Sort sort);
+
+    @Query("SELECT e FROM Charge e WHERE e.startDate <= ?2 AND (e.endDate >= ?1 OR e.endDate IS NULL)")
+    public List<Charge> findByStartDateAndEndDate(Date date, Date lastDate);
 }

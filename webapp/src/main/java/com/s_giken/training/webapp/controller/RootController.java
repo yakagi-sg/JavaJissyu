@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import java.util.List;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * ルートパスのコントローラークラス
@@ -27,13 +27,14 @@ public class RootController {
 	 */
 	@GetMapping("/")
 	public String hello(Model model) {
-		LocalDateTime today = LocalDateTime.now();
-		String formatDate = today.format(DateTimeFormatter.ofPattern("yyyyMM"));
-		String year = formatDate.substring(0, 4);
-		String month = formatDate.substring(4);
+		LocalDate today = LocalDate.now();
+		LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+		LocalDate todayOfNextMonth = today.plusMonths(1).withDayOfMonth(1);
+		LocalDate lastDayOfNextMonth = todayOfNextMonth.with(TemporalAdjusters.lastDayOfMonth());
 
-		List<Charge> chargeList = chargeService.findChargesForMonth(year, month);
-		List<Charge> nextChargeList = chargeService.findChargesForNextMonth(year, month);
+		List<Charge> chargeList = chargeService.findByStartDateAndEndDate(today, lastDayOfMonth);
+		List<Charge> nextChargeList =
+				chargeService.findByNextStartDateAndEndDate(todayOfNextMonth, lastDayOfNextMonth);
 
 		int count = chargeList.size();
 		int nextCount = nextChargeList.size();
