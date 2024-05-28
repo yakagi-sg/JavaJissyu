@@ -53,7 +53,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public List<Member> findByConditions(MemberSearchCondition memberSearchCondition) {
-        // TODO: 氏名検索用メソッドを呼び出すように修正
         Sort sort = Sort.by(
                 Sort.Direction.fromString(memberSearchCondition.getSortDirection()),
                 memberSearchCondition.getColumn());
@@ -86,5 +85,20 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteById(int memberId) {
         memberRepository.deleteById(memberId);
+    }
+
+    @Override
+    public void saveMemberNum(Member member) {
+        Integer maxMemberNum = memberRepository.findMaxMemberNum();
+        if (maxMemberNum == null) {
+            maxMemberNum = 1;
+            member.setMemberNum(maxMemberNum);
+            memberRepository.save(member);
+        }
+        if(maxMemberNum != null){
+        Integer nextMemberNum = maxMemberNum + 1;
+        member.setMemberNum(nextMemberNum);
+        memberRepository.save(member);
+        }
     }
 }

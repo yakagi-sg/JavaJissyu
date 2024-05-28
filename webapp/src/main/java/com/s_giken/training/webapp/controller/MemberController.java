@@ -80,6 +80,7 @@ public class MemberController {
 		if (memberOptional.isPresent()) {
 			var member = memberOptional.get(); // OptionalからMemberオブジェクトを取得
 			model.addAttribute("member", member);
+			model.addAttribute("memberNum", member.getMemberNum());
 			model.addAttribute("memberId", member.getMemberId()); // memberIdを取得してモデルに追加
 			return "member_edit";
 		} else {
@@ -117,6 +118,7 @@ public class MemberController {
 			return "member_edit";
 		}
 		memberService.save(member);
+		memberService.saveMemberNum(member);
 		redirectAttributes.addFlashAttribute("message", "保存しました。");
 		return "redirect:/member/edit/" + member.getMemberId();
 	}

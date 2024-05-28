@@ -16,6 +16,14 @@
                 <span class="text-danger" th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}"></span>
             </div>
         </div>
+        <input type="hidden" th:field="*{memberNum}">
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label" for="memberNum">会員番号</label>
+            <div class="col-sm-8">
+                <a th:text="${memberNum}"></a>
+                <span class="text-danger" th:if="${#fields.hasErrors('memberNum')}" th:errors="*{memberNum}"></span>
+            </div>
+        </div>
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label" for="mail">メールアドレス</label>
             <div class="col-sm-10">

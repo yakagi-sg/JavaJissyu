@@ -51,6 +51,10 @@ public class Member {
     @Column(name = "member_id")
     private int memberId;
 
+
+    @Column(name = "member_num")
+    private int memberNum;
+
     @Column(name = "mail")
     @NotNull
     @NotBlank

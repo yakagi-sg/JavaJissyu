@@ -3,6 +3,7 @@ package com.s_giken.training.webapp.repository;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.s_giken.training.webapp.model.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
@@ -23,5 +24,9 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
      */
 
     public List<Member> findByMailLikeAndNameLike(String mail, String name);
-    public List<Member> findByMailLikeAndNameLike(String mail, String name,Sort sort);
+
+    public List<Member> findByMailLikeAndNameLike(String mail, String name, Sort sort);
+
+    @Query("select max(m.memberNum) from Member m")
+    public Integer findMaxMemberNum();
 }

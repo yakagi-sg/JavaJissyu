@@ -24,4 +24,6 @@ public interface MemberService {
     public void save(Member member);
 
     public void deleteById(int memberId);
+
+    public void saveMemberNum(Member member);
 }
