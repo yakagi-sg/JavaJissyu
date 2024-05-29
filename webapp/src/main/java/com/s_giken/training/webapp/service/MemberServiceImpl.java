@@ -89,16 +89,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void saveMemberNum(Member member) {
+        if (member.getMemberNum() > 0) {
+            return;
+        }
         Integer maxMemberNum = memberRepository.findMaxMemberNum();
         if (maxMemberNum == null) {
             maxMemberNum = 1;
-            member.setMemberNum(maxMemberNum);
-            memberRepository.save(member);
+        } else {
+            maxMemberNum += 1;
         }
-        if(maxMemberNum != null){
-        Integer nextMemberNum = maxMemberNum + 1;
-        member.setMemberNum(nextMemberNum);
+        member.setMemberNum(maxMemberNum);
         memberRepository.save(member);
-        }
     }
 }
