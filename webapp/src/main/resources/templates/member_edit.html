@@ -10,7 +10,7 @@
     <form th:action="@{/member/save}" th:object="${member}" method="POST">
         <input type="hidden" th:field="*{memberId}">
         <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label" for="memberId">加入者ID</label>
+            <label class="col-sm-2 col-form-label" for="memberId">加入者番号</label>
             <div class="col-sm-8">
                 <a th:text="${memberId}"></a>
                 <span class="text-danger" th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}"></span>

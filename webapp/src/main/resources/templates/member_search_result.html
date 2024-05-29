@@ -17,7 +17,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <td scope="col">加入者ID</td>
+                <td scope="col">加入者番号</td>
                 <td scope="col">会員番号</td>
                 <td scope="col">メール</td>
                 <td scope="col">氏名</td>
@@ -41,7 +41,7 @@
                 <td th:text="${row.paymentMethod}"></td>
             </tr>
             <tr th:if="${#lists.isEmpty(result)}">
-                <td colspan="7">
+                <td colspan="8">
                     <div class="text-center lh-lg">該当する情報が見つかりませんでした。</div>
                 </td>
             </tr>
