@@ -110,7 +110,7 @@ public class MemberController {
 	 * @return リダイレクト先のURL
 	 */
 	@PostMapping("/save")
-	public String saveMember(
+	synchronized public String saveMember(
 			@Validated Member member,
 			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
